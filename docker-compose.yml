@@ -1,11 +1,45 @@
-version: '3'
+version: '3.8'
 
 services:
-
   biblioteca:
+    image: ghcr.io/yajanuha597/biblioteca-flask:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
 
-    build: .
+    networks:
+      - traefik-public
 
-    ports:
+    deploy:
+      replicas: 1
 
-      - "5000:5000"
+      update_config:
+        parallelism: 1
+        delay: 10s
+
+      restart_policy:
+        condition: on-failure
+
+      labels:
+        - "traefik.enable=true"
+
+        - "traefik.http.routers.biblioteca.entrypoints=http"
+        - "traefik.http.routers.biblioteca.rule=Host(`yajanuha.byronrm.com`)"
+
+        - "traefik.http.middlewares.biblioteca-https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.biblioteca.middlewares=biblioteca-https-redirect"
+
+        - "traefik.http.routers.biblioteca-secure.entrypoints=https"
+        - "traefik.http.routers.biblioteca-secure.rule=Host(`yajanuha.byronrm.com`)"
+        - "traefik.http.routers.biblioteca-secure.tls=true"
+        - "traefik.http.routers.biblioteca-secure.tls.certresolver=http"
+
+        - "traefik.http.routers.biblioteca-secure.service=biblioteca"
+
+        - "traefik.http.services.biblioteca.loadbalancer.server.port=5000"
+
+        - "traefik.docker.network=traefik-public"
+
+networks:
+  traefik-public:
+    external: true 

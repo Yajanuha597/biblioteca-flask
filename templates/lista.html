@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mis tareas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Tareas Registradas</h1>
+
+<ul>
+
+{% for tarea in tareas %}
+
+<li>{{ tarea }}</li>
+
+{% endfor %}
+
+</ul>
+
+<a href="/">Inicio</a>
+
+</body>
+</html>
