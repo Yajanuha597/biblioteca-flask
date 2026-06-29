@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     permissions:
@@ -15,7 +14,6 @@ jobs:
       packages: write
 
     steps:
-
       - name: Descargar repositorio
         uses: actions/checkout@v4
 
@@ -33,7 +31,7 @@ jobs:
         run: |
           python -m py_compile app.py
 
-      - name: Iniciar sesión en GHCR
+      - name: Login en GitHub Container Registry
         run: |
           echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
